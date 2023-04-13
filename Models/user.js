@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const { userTypes, userStatus } = require('../utils/constants')
 const userSchema = new mongoose.Schema({
     name: {
         type:String,
@@ -25,12 +25,12 @@ const userSchema = new mongoose.Schema({
     userType: {
         type:String,
         required:true,
-        default:'CUSTOMER'
+        default: userTypes.customer
     },
     userStatus: {
         type:String,
         required:true,
-        default:'APPROVED'
+        default: userStatus.approved
     }
 })
 

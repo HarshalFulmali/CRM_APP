@@ -41,3 +41,13 @@ exports.getUserById = async(req, res) =>{
         return res.status(500).send({message:'Internal server error'});
     }
 }
+
+exports.deleteUser = async (req, res) => {
+    try{
+        await User.deleteOne({_id:req.params.id});
+        return res.status(200).send({message:"deleted successfully"})
+    }
+    catch(e) {
+        return res.status(500).send({message:'Internal server error'})
+    }
+}
