@@ -1,12 +1,15 @@
 const User = require('../Models/user');
 const bcrypt = require('bcrypt');
+const { userStatus } = require('../utils/constants')
 
 exports.createUser = async (req, res)=>{
     const user = await User.create({
         name: req.body.name,
         userId: req.body.userId,
         email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 5)
+        password: bcrypt.hashSync(req.body.password, 8),
+        userType: req.body.userType,
+        userStatus:req.body.userStatus
     });
 
     if(!user) {
@@ -50,4 +53,19 @@ exports.deleteUser = async (req, res) => {
     catch(e) {
         return res.status(500).send({message:'Internal server error'})
     }
+}
+
+exports.userUpdate = async(req, res)=>{
+    const updateUserId = req.params.id;
+
+    const saveUser = await User.findOne({_id:updateUserId});
+
+    if(req.body.status === userStatus.approved) {
+        saveUser.userStatus = userStatus.approved;
+    }
+
+    const updatUser = await saveUser.save();
+
+    return res.status(200).send(updatUser)
+
 }

@@ -33,6 +33,7 @@ exports.signUp = async (req, res) => {
             userId: user.userId,
             email: user.email,
             userType: user.userType,
+            userStatus: user.userStatus,
             message: "user created successfully"
         })
 
@@ -48,6 +49,10 @@ exports.signIn = async (req, res)=> {
 
     if(user === null) {
         return res.status(400).send({message:"Invalid userId"});
+    }
+
+    if(user.userStatus != userStatus.approved) {
+        return res.status(200).send(`can't allow to login as this user in ${user.userStatus} status`);
     }
 
     const isPasswordVaild = bcrypt.compareSync(req.body.password, user.password);
