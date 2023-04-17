@@ -3,7 +3,8 @@ const { userTypes, userStatus } = require('../utils/constants');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../configs/auth.config');
-
+const emailScript = require('../script/emailNotificationScripts');
+const { sendEmail } = require("../utils/notificationClient")
 
 
 exports.signUp = async (req, res) => {
@@ -28,14 +29,24 @@ exports.signUp = async (req, res) => {
 
     try{
         const user = await User.create(userObj);
-        res.status(201).send({
+        
+        // send notification mail to registored email for successfully registoring
+
+        const {subject, text, html} = emailScript.userRegistrationNotification(user);
+        sendEmail([user.email],subject,text,html)
+        
+        const userResposneObj = {
             name: user.name,
             userId: user.userId,
             email: user.email,
             userType: user.userType,
             userStatus: user.userStatus,
             message: "user created successfully"
-        })
+        }
+
+        
+
+        res.status(201).send({ userResposneObj })
 
     }
     catch(error) {
