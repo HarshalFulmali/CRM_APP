@@ -74,6 +74,7 @@ exports.signIn = async (req, res)=> {
 
     const token = jwt.sign({id:user.userId}, authConfig.secret,{expiresIn:86400});
     res.status(201).send({
+        id:user._id,
         name: user.name,
         userId: user.userId,
         email: user.email,
